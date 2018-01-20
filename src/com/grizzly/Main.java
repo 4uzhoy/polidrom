@@ -15,22 +15,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Main {
-    static String strInput;
-    static char[] charArray;
-    static int[] intArray;
-    static int rightConst, leftConst;
-    static int midRight, midLeft;
-    static int middle;
+    private static int[] origIntArray;
+    private static int[] intArray;
+    private static int rightConst, leftConst;
+    private static int midRight, midLeft;
+    private static int middleConst;
+
 
     public static void main(String[] args) throws Exception {
 
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 
         //read string, check valid and push string to char array if true
+
         Pattern p = Pattern.compile("[0-9]+");
-        strInput = input.readLine();
+        String strInput = input.readLine();
         Matcher m = p.matcher(strInput);
 
+        char[] charArray;
         try {
             if (m.matches()) {
                 charArray = strInput.toCharArray();
@@ -40,7 +42,7 @@ public class Main {
             }
 
         } catch (NumberFormatException invalidNumber) {
-            System.out.println(" *** Wrong number format ***\n String must have only numbers without any symbols or spaces ");
+            System.out.println("    *** Wrong number format ***\n String must have only numbers without any symbols or spaces \n Restart programm.");
             return;
         }
 
@@ -48,10 +50,12 @@ public class Main {
         int size = strInput.length();
         System.out.println(size);
         intArray = new int[size];
+        origIntArray = new int[size];
 
         //convert chars array at int array
         for (int i = 0; i < size; i++) {
             intArray[i] = Character.digit(charArray[i], 10);
+            origIntArray[i] = intArray[i];
             System.out.println("int " + intArray[i] + " char " + charArray[i]);
         }
 
@@ -122,18 +126,36 @@ public class Main {
                             right--;
                         }
                     }
-                    if (intArray[leftConst++] == intArray[rightConst--]) {
+                    if (intArray[leftConst] == intArray[rightConst]) {
+                        System.out.println("Fuck");
                         System.out.println(leftConst + " left " + rightConst + " right");
-                        continue;
                     }
 
+
+                    leftConst++;
+                    rightConst--;
                     //second check equality
 
                 }
 
             } else {
+
                 if (intArray[leftConst] < intArray[rightConst]) {
-                    intArray[midLeft]++;
+                    if (intArray[midLeft] != 9) {
+                        intArray[midLeft]++;
+                    } else {
+                        left = midLeft;
+                        for (int i = 0; i < size / 2; i++) {
+                            if (intArray[left] == 9) {
+                                intArray[left] = 0;
+                                left--;
+                            } else {
+                                intArray[left]++;
+                                break;
+                            }
+                        }
+
+                    }
                     invertE(size);
                     print(size);
                     return;
@@ -150,22 +172,114 @@ public class Main {
 
         } else {
             //123 4 567 size =7 (7-1)/2=middle; middle -1 = leftMid; middle+1 = rightMid;
-            int right, left;
+            int right, left, flag;
             rightConst = size - 1;
             leftConst = 0;
-            middle = (size - 1) / 2;
-            midRight = middle + 1;
-            midLeft = middle - 1;
+            middleConst = (size - 1) / 2;
+            midRight = middleConst + 1;
+            midLeft = middleConst - 1;
+            if (size == 1 && intArray[middleConst] == 9) {
+                intArray[0] = 10;
+            }
 
             if (intArray[leftConst] == intArray[rightConst]) {
-                System.out.println("size % 2 != 0");
+                flag = 0;
+                left = midLeft;
+                right = midRight;
+                System.out.println("first ceck equality");
+                if (intArray[middleConst] != 9) {
+                    intArray[middleConst]++;
+                    invertO();
+                    print(size);
+                    return;
+                }
+                if (intArray[middleConst] == 9 && intArray[left] == 9 && intArray[right] != 9) {
+                    intArray[middleConst] = 0;
+                    for (int i = 0; i < middleConst; i++) {
+                        if (intArray[left] == 9 && flag == 0) {
+                            intArray[left] = 0;
+                            if (i + 1 == middleConst) {
+                                flag++;
+                            }
+                        } else {
+                            intArray[left]++;
+                            flag++;
+                            if (flag != 0) {
+                                break;
+                            }
+                        }
+
+                        left--;
+                    }
+                    if (flag == 0) {
+                        System.out.println("A");
+                        invertO();
+                        print(size);
+                        return;
+                    }
+                }
+                left = midLeft;
+                right = midRight;
+                if (intArray[middleConst] == 9 && intArray[left] != 9) {
+                    intArray[middleConst] = 0;
+                    intArray[left]++;
+                    System.out.println("B");
+                    invertO();
+                    print(size);
+                    return;
+
+                }
+
+                for (int i = 0; i < middleConst; i++) {
+                    //check if element not 9 and flag++ if its true
+                    //System999.out.println("left " + left + "  " + right + " right ");
+
+                    if (intArray[left] != 9 || intArray[right] != 9) {
+                        flag++;
+                    }
+                    //so if flag !=0 we never enter in this condition, if not then we init all elemts =0 and first will be 10 last 1
+                    if (i + 1 == middleConst && intArray[leftConst] == 9 && intArray[rightConst] == 9 && flag == 0) {
+                        right = midRight;
+                        left = midLeft;
+                        for (i = 0; i < middleConst; i++) {
+                            intArray[left] = 0;
+                            intArray[right] = 0;
+                            left--;
+                            right++;
+
+                        }
+                        intArray[middleConst] = 0;
+                        intArray[0] = 10;
+                        intArray[size - 1] = 1;
+                        break;
+
+                    }
+                }
+
+
             } else {
 
                 if (intArray[leftConst] < intArray[rightConst]) {
                     System.out.println("l<r");
 
+                    if (intArray[middleConst] != 9) {
+                        intArray[middleConst]++;
+                    } else {
+                        left = middleConst;
+                        //intArray[middle]=0;
 
-                    intArray[middle]++;
+                        for (int i = 0; i < middleConst + 1; i++) {
+                            System.out.println("left   " + left);
+                            if (intArray[left] == 9) {
+                                intArray[left] = 0;
+                                left--;
+                            } else {
+                                intArray[left]++;
+                                break;
+                            }
+                        }
+
+                    }
                     invertO();
                     print(size);
                     return;
@@ -179,13 +293,11 @@ public class Main {
                     return;
                 }
             }
-
-
         }
         print(size);
     }
 
-    public static void invertE(int size) {
+    private static void invertE(int size) {
         int right = size / 2;
         int left = right - 1;
         for (int i = 0; i < size / 2; i++) {
@@ -194,24 +306,40 @@ public class Main {
             left--;
             right++;
         }
-
     }
 
     private static void invertO() {
         int right = midRight;
         int left = midLeft;
-        for (int i = 0; i < middle; i++) {
+        for (int i = 0; i < middleConst; i++) {
             System.out.println("invO left " + left + " right " + right);
             intArray[right] = intArray[left];
             left--;
             right++;
         }
-
     }
 
     private static void print(int size) {
+        for (int k = 0; k < size + 18; k++) {
+            System.out.print("_");
+        }
+        System.out.print("\n* Number   Size: " + size);
+        System.out.print("\n* Your   Number: ");
+
+        for (int i = 0; i < size; i++) {
+            System.out.print(origIntArray[i]);
+        }
+        System.out.println("");
+
+
+        System.out.print("* Your Polidrom: ");
         for (int i = 0; i < size; i++) {
             System.out.print(intArray[i]);
+        }
+        System.out.println();
+
+        for (int k = 0; k < size + 18; k++) {
+            System.out.print("_");
         }
     }
 }
