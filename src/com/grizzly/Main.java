@@ -204,6 +204,27 @@ public class Main {
                     print(size);
                     return;
                 }
+                if (intArray[middleConst] == 9 && intArray[midRight] == 9 && intArray[midLeft] == 9) {
+                    intArray[middleConst] = 0;
+                    for (int i = 0; i < middleConst + 1; i++) {
+                        if (intArray[left] != 9 || intArray[right] != 9) {
+                            intArray[left]++;
+                            intArray[right]++;
+                            invertO();
+                            print(size);
+                            return;
+                        } else {
+
+                            intArray[left] = 0;
+                            intArray[right] = 0;
+
+
+                        }
+                        left--;
+                        right++;
+                    }
+
+                }
                 if (intArray[middleConst] == 9 && intArray[left] == 9 && intArray[right] != 9) {
                     //
                     intArray[middleConst] = 0;
@@ -348,4 +369,3 @@ public class Main {
         }
     }
 }
-/**/
