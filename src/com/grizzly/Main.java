@@ -112,7 +112,9 @@ public class Main {
                         }
                         intArray[0] = 10;
                         intArray[size - 1] = 1;
-                        break;
+                        invertE(size);
+                        print(size);
+                        return;
                     }
                     left--;
                     right++;
@@ -128,7 +130,7 @@ public class Main {
                         right = midRight;
                         for (i = 0; i < size / 2; i++) {
                             if (intArray[left] == 9) {
-                                System.out.println("asdasd");
+                                flag++;
                                 intArray[left] = 0;
                             } else {
                                 intArray[left]++;
@@ -145,6 +147,8 @@ public class Main {
 
                 }
                 invertE(size);
+                print(size);
+                return;
 
             } else {
 
@@ -201,6 +205,7 @@ public class Main {
                     return;
                 }
                 if (intArray[middleConst] == 9 && intArray[left] == 9 && intArray[right] != 9) {
+                    //
                     intArray[middleConst] = 0;
                     for (int i = 0; i < middleConst; i++) {
                         if (intArray[left] == 9 && flag == 0) {
