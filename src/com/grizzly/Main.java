@@ -1,13 +1,33 @@
 package com.grizzly;
-/*HI all, thanks for executing my code, this function find number polidrom.
-but polidrom must be bigger then number at 1 or more
-example 123456 -> 124421
-1234567 -> 1235321
-many exceptions with numbers 9999 or 969969 and etc
-
-code have to 2 methods
-print and invert
-* */
+/* ************************************************************************************
+*HI all, thanks for executing my code, this program find number palindrome.
+* Just enter input and see result.
+*
+* This task was a qualifier task for the programmer olympics
+* A palindrome is a word, phrase, number, or other sequence of characters which reads the same backward as forward,
+* such as "madam" or "taco cat" or "race car".
+*
+* But the palindrome must
+* 1)be minimally bigger than the input number
+* 2)input should to support the 10^6 digits and less
+*
+* example:
+* input:     output:
+* 123456  -> 124421
+* 1234567 -> 1235321
+* i have many problems with numbers 9999 or 969969 and etc...
+* so in the code a lot of if-else construction
+*
+* code have to 3 methods
+* print - for printing initial number and palindrome
+* invertO - inversion for odd numbers
+* invertE - inversion for even numbers
+*
+* If you like it,please like it ^_^
+* Created by  Rusich on 21/01/2018
+* kz, Almaty city
+*
+* *************************************************************************************/
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -20,23 +40,25 @@ public class Main {
     private static int rightConst, leftConst;
     private static int midRight, midLeft;
     private static int middleConst;
+    private static long startTime;
+    private static long timeSpent;
 
 
     public static void main(String[] args) throws Exception {
-
+        startTime = System.nanoTime();
+        //(1)
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-
         //read string, check valid and push string to char array if true
-
+        //(1)
         Pattern p = Pattern.compile("[0-9]+");
         String strInput = input.readLine();
         Matcher m = p.matcher(strInput);
-
+        //why if i write time spent here, its printing time executing, but if in (1) time is 0?
+        timeSpent = System.nanoTime() - startTime;
         char[] charArray;
         try {
             if (m.matches()) {
                 charArray = strInput.toCharArray();
-                System.out.println(m.matches());
             } else {
                 throw new NumberFormatException();
             }
@@ -48,7 +70,6 @@ public class Main {
 
 
         int size = strInput.length();
-        System.out.println(size);
         intArray = new int[size];
         origIntArray = new int[size];
 
@@ -56,10 +77,7 @@ public class Main {
         for (int i = 0; i < size; i++) {
             intArray[i] = Character.digit(charArray[i], 10);
             origIntArray[i] = intArray[i];
-            System.out.println("int " + intArray[i] + " char " + charArray[i]);
         }
-
-
         //_________________________logic starts here_________________________________________________________\\
         if (size % 2 == 0) {
 
@@ -72,17 +90,10 @@ public class Main {
 
             right = size / 2;
             left = right - 1;
-            //System.out.println(leftConst + " left " + rightConst + " right");
-            System.out.println("in %2==0");
-
-
             //first check equality
             if (intArray[leftConst] == intArray[rightConst]) {
-                System.out.println("first check equality");
                 for (int i = 0; i < size / 2; i++) {
                     //check if element not 9 and flag++ if its true
-                    System.out.println("left " + left + "  " + right + " right ");
-
                     if (intArray[left] != 9 || intArray[right] != 9) {
                         flag++;
                     }
@@ -105,7 +116,7 @@ public class Main {
                     }
                     left--;
                     right++;
-                    //if middle elements aquality and not 9 then we can ++ them
+                    //if middle elements equality and not 9 then we can ++ them
                     if (i + 1 == (size / 2) && intArray[midRight] != 9) {
                         intArray[leftConst]++;
                         intArray[rightConst]++;
@@ -116,27 +127,24 @@ public class Main {
                         left = midLeft;
                         right = midRight;
                         for (i = 0; i < size / 2; i++) {
-                            if (intArray[right] == 9) {
-                                intArray[right] = 0;
+                            if (intArray[left] == 9) {
+                                System.out.println("asdasd");
+                                intArray[left] = 0;
                             } else {
-                                intArray[right]++;
+                                intArray[left]++;
                                 invertE(size);
                                 break;
                             }
-                            right--;
+                            left--;
                         }
                     }
-                    if (intArray[leftConst] == intArray[rightConst]) {
-                        System.out.println("Fuck");
-                        System.out.println(leftConst + " left " + rightConst + " right");
-                    }
-
 
                     leftConst++;
                     rightConst--;
                     //second check equality
 
                 }
+                invertE(size);
 
             } else {
 
@@ -186,7 +194,6 @@ public class Main {
                 flag = 0;
                 left = midLeft;
                 right = midRight;
-                System.out.println("first ceck equality");
                 if (intArray[middleConst] != 9) {
                     intArray[middleConst]++;
                     invertO();
@@ -212,7 +219,6 @@ public class Main {
                         left--;
                     }
                     if (flag == 0) {
-                        System.out.println("A");
                         invertO();
                         print(size);
                         return;
@@ -223,7 +229,6 @@ public class Main {
                 if (intArray[middleConst] == 9 && intArray[left] != 9) {
                     intArray[middleConst] = 0;
                     intArray[left]++;
-                    System.out.println("B");
                     invertO();
                     print(size);
                     return;
@@ -260,8 +265,6 @@ public class Main {
             } else {
 
                 if (intArray[leftConst] < intArray[rightConst]) {
-                    System.out.println("l<r");
-
                     if (intArray[middleConst] != 9) {
                         intArray[middleConst]++;
                     } else {
@@ -269,7 +272,6 @@ public class Main {
                         //intArray[middle]=0;
 
                         for (int i = 0; i < middleConst + 1; i++) {
-                            System.out.println("left   " + left);
                             if (intArray[left] == 9) {
                                 intArray[left] = 0;
                                 left--;
@@ -286,8 +288,6 @@ public class Main {
                 }
 
                 if (intArray[leftConst] > intArray[rightConst]) {
-                    System.out.println("l>r");
-
                     invertO();
                     print(size);
                     return;
@@ -295,13 +295,13 @@ public class Main {
             }
         }
         print(size);
+
     }
 
     private static void invertE(int size) {
         int right = size / 2;
         int left = right - 1;
         for (int i = 0; i < size / 2; i++) {
-            System.out.println("invE left " + left + " right " + right);
             intArray[right] = intArray[left];
             left--;
             right++;
@@ -312,7 +312,6 @@ public class Main {
         int right = midRight;
         int left = midLeft;
         for (int i = 0; i < middleConst; i++) {
-            System.out.println("invO left " + left + " right " + right);
             intArray[right] = intArray[left];
             left--;
             right++;
@@ -323,8 +322,8 @@ public class Main {
         for (int k = 0; k < size + 18; k++) {
             System.out.print("_");
         }
-        System.out.print("\n* Number   Size: " + size);
-        System.out.print("\n* Your   Number: ");
+        System.out.print("\n* Number     Size: " + size);
+        System.out.print("\n* Your     Number: ");
 
         for (int i = 0; i < size; i++) {
             System.out.print(origIntArray[i]);
@@ -332,70 +331,16 @@ public class Main {
         System.out.println("");
 
 
-        System.out.print("* Your Polidrom: ");
+        System.out.print("* Your Palindrome: ");
         for (int i = 0; i < size; i++) {
             System.out.print(intArray[i]);
         }
-        System.out.println();
 
+        System.out.println("\n* Execute    Time: " + timeSpent / 1000000 + " ms.");
         for (int k = 0; k < size + 18; k++) {
             System.out.print("_");
+
         }
     }
 }
-/*    Задача С
--------------
-        Подсчитать количество символов во введенной строке.
-        Если количество четное, 1
-        Иначе, 2
-        (1)
-        Разбить на 2 части. Лев. и Прав.
-        Если первый символ Прав. < послед. символ Лев.:
-        Прав = инвертировать(Лев.)
-        Если первый символ Прав. > послед. символ Лев.:
-        инкремент(последний символ Лев. )
-        Прав = инвертировать(Лев.)
-        Если первый символ Прав. == послед. символ Лев.:
-        сравнивать следующий символ из Прав. и предыдущий символ из Лев., пока они равны.
-        При первом неравенстве:
-        Если след. символ Прав. < предыдущ.. символ Лев.:
-        Прав = инвертировать(Лев.)
-        Если след. символ Прав. > предыдущ. символ Лев.:
-        инкремент(последний символ Лев. )
-        Прав = инвертировать(Лев.)
-        (2)
-        Разбить на 3 части. Лев., Центр (1 символ) и Прав.
-        Если первый символ Прав. < послед. символ Лев.:
-        Прав = инвертировать(Лев.)
-        Если первый символ Прав. > послед. символ Лев.:
-        инкремент(Центр)
-        Прав = инвертировать(Лев.)
-        Если первый символ Прав. == послед. символ Лев.:
-        сравнивать следующий символ из Прав. и предыдущий символ из Лев., пока они равны.
-        При первом неравенстве:
-        Если след. символ Прав. < предыдущ.. символ Лев.:
-        Прав = инвертировать(Лев.)
-        Если след. символ Прав. > предыдущ. символ Лев.:
-        инкремент(Центр)
-        Прав = инвертировать(Лев.)
-        Примечание: инкремент() - функция, которая увеличивает заданный разряд на единицу и при необходимости увеличивает старшие разряды (влево от заданного).*/
-
-/*bigger smoller
-        if (intArray[leftConst] > intArray[rightConst]) {
-                System.out.println("l>r");
-                invert(size, leftConst, rightConst);
-                print(size);
-                return;
-
-                }
-
-
-                if (intArray[leftConst] < intArray[rightConst]) {
-        System.out.println("l<r");
-        intArray[midLeft]++;
-        invert(size, leftConst, rightConst);
-        print(size);
-        return;
-        }*/
-
-
+/**/
